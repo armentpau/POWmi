@@ -41,7 +41,7 @@
 		$streamWriter.WriteLine("$($results)")
 		$streamWriter.dispose()
 		$namedPipe.dispose()
-	}
+}	
 	$scriptBlockPreEncoded = $scriptBlockPreEncoded -replace "<pipename>", $PipeName
 	$scriptBlockPreEncoded = $scriptBlockPreEncoded -replace "<scriptBlock>", $ScriptBlock
 	$scriptBlockPreEncoded = $scriptBlockPreEncoded -replace "<output>", $ScriptBlockOutputVariable

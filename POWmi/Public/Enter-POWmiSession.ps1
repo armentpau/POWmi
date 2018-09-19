@@ -3,7 +3,17 @@
 	[CmdletBinding()]
 	param
 	(
-		$ComputerName,
+		[ValidateNotNullOrEmpty()]
+		[Alias('Name')]
+		$PipeName = (New-Guid).Guid.ToString(),
+		[Parameter(Mandatory = $true)]
+		[ValidateNotNullOrEmpty()]
+		[scriptblock]$ScriptBlock,
+		[Parameter(Mandatory = $false)]
+		[ValidateNotNullOrEmpty()]
+		[string]$ComputerName = 'localhost',
+		[Parameter(Mandatory = $true)]
+		[ValidateNotNullOrEmpty()]
 		[pscredential]$Credential
 	)
 	
@@ -14,12 +24,12 @@
 		$input = PSConsoleHostReadLine
 		switch ($input)
 		{
-			"Quit"{
+			{($_ -eq "Quit") -or ($_ -eq "Exit-POWmisession") -or($_ -eq "Exit") }{
 				$quitflag = $true
 			}
 			default
 			{
-				Invoke-Expression $input
+				
 			}
 		}
 	}
