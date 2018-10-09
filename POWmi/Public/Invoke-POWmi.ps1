@@ -44,7 +44,6 @@
 }	
 	$scriptBlockPreEncoded = $scriptBlockPreEncoded -replace "<pipename>", $PipeName
 	$scriptBlockPreEncoded = $scriptBlockPreEncoded -replace "<scriptBlock>", $ScriptBlock
-	$scriptBlockPreEncoded = $scriptBlockPreEncoded -replace "<output>", $ScriptBlockOutputVariable
 	$byteCommand = [System.Text.encoding]::Unicode.GetBytes($scriptBlockPreEncoded)
 	$encodedScriptBlock = [convert]::ToBase64string($byteCommand)
 	

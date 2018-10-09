@@ -76,7 +76,7 @@
 	NestedModules = @()
 	
 	# Functions to export from this module
-	FunctionsToExport = '*' #For performance, list functions explicitly
+	FunctionsToExport = @('Invoke-POWmi') #For performance, list functions explicitly
 	
 	# Cmdlets to export from this module
 	CmdletsToExport = '*' 
