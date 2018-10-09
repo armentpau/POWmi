@@ -1,0 +1,19 @@
+﻿<Project Synchronized="False" SyncFilter="*.ps1;*.psm1;*.psd1;*.ps1xml;*.psf;*.pss;*.xml;*.help.txt" AutoExportFunctions="True" AutoExportPS1XMLFiles="True">
+  <Version>2.1</Version>
+  <FileID>eca2583a-643e-4764-b120-2118b850118d</FileID>
+  <ProjectType>1</ProjectType>
+  <Folders>
+    <Folder>Public</Folder>
+    <Folder>Private</Folder>
+  </Folders>
+  <Files>
+    <File Build="2">POWmi.psd1</File>
+    <File Build="0" ExportFunctions="True">POWmi.psm1</File>
+    <File Build="1" Shared="False" ReferenceFunction="Invoke-Test-Module_ps1" ExportFunctions="False">Test-Module.ps1</File>
+    <File Build="1">.gitignore</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-Invoke-POWmi_ps1" ExportFunctions="False">Public\Invoke-POWmi.ps1</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-ConvertFrom-Base64StringToObject_ps1" ExportFunctions="False">Private\ConvertFrom-Base64StringToObject.ps1</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-ConvertTo-Base64StringFromObject_ps1" ExportFunctions="False">Private\ConvertTo-Base64StringFromObject.ps1</File>
+  </Files>
+  <StartupScript>C:\Users\949237\Documents\Repos\POWmi\POWmi\Test-Module.ps1</StartupScript>
+</Project>
