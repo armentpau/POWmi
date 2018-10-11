@@ -1,0 +1,16 @@
+﻿<ProjectState>
+  <Version>1.0</Version>
+  <FileID>eca2583a-643e-4764-b120-2118b850118d</FileID>
+  <OpenFolders>
+    <Folder>Public</Folder>
+    <Folder>Private</Folder>
+  </OpenFolders>
+  <OpenFiles>
+    <File>Test-Module.ps1</File>
+    <File>POWmi.psd1</File>
+    <File>POWmi.psm1</File>
+    <File>Public\Invoke-POWmi.ps1</File>
+    <File>Private\ConvertFrom-Base64StringToObject.ps1</File>
+    <File>Private\ConvertTo-Base64StringFromObject.ps1</File>
+  </OpenFiles>
+</ProjectState>
