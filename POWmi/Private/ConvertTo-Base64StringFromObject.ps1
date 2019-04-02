@@ -7,9 +7,16 @@
 		[Parameter(Mandatory = $true,
 				   Position = 0)]
 		[ValidateNotNullOrEmpty()]
-		[Alias('object', 'data')]
-		[psobject]$Input
+		[Alias('object', 'data','input')]
+		[psobject]$inputObject
 	)
-	
-	return [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes([management.automation.psserializer]::Serialize($Input)))
+	#$holdingXml = ConvertTo-CliXml -InputObject $inputString
+	$tempString = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes([management.automation.psserializer]::Serialize($inputString)))
+	$memoryStream = New-Object System.IO.MemoryStream
+	$compressionStream = New-Object System.IO.Compression.GZipStream($memoryStream, [System.io.compression.compressionmode]::Compress)
+	$streamWriter = New-Object System.IO.streamwriter($compressionStream)
+	$streamWriter.write($tempString)
+	$streamWriter.close()
+	$compressedData = [System.convert]::ToBase64String($memoryStream.ToArray())
+	return $compressedData
 }

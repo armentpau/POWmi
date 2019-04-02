@@ -5,7 +5,7 @@
 	(
 		[ValidateNotNullOrEmpty()]
 		[Alias('Name')]
-		$PipeName = (New-Guid).Guid.ToString(),
+		$PipeName = ([guid]::NewGuid()).Guid.ToString(),
 		[Parameter(Mandatory = $true)]
 		[ValidateNotNullOrEmpty()]
 		[scriptblock]$ScriptBlock,
@@ -18,7 +18,7 @@
 	)
 	
 	$scriptBlockPreEncoded = [scriptblock]{
-		function ConvertTo-PDBase64StringFromObject
+		function ConvertTo-Base64StringFromObject
 		{
 			[CmdletBinding()]
 			param
@@ -29,19 +29,37 @@
 				[ValidateNotNullOrEmpty()]
 				[object]$object
 			)
-			
-			return [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes([management.automation.psserializer]::Serialize($object)))
+			function ConvertTo-CliXml
+			{
+				param (
+					[Parameter(Position = 0, Mandatory = $true, ValueFromPipeline = $true)]
+					[ValidateNotNullOrEmpty()]
+					[PSObject[]]$InputObject
+				)
+				return [management.automation.psserializer]::Serialize($InputObject)
+			}
+			$holdingXml = ConvertTo-CliXml -InputObject $object
+			$preConversion_bytes = [System.Text.Encoding]::UTF8.GetBytes($holdingXml)
+			$preconversion_64 = [System.Convert]::ToBase64String($preConversion_bytes)
+			$memoryStream = New-Object System.IO.MemoryStream
+			$compressionStream = New-Object System.IO.Compression.GZipStream($memoryStream, [System.io.compression.compressionmode]::Compress)
+			$streamWriter = New-Object System.IO.streamwriter($compressionStream)
+			$streamWriter.write($preconversion_64)
+			$streamWriter.close()
+			$compressedData = [System.convert]::ToBase64String($memoryStream.ToArray())
+			return $compressedData
 		}
 		$namedPipe = new-object System.IO.Pipes.NamedPipeServerStream "<pipename>", "Out"
 		$namedPipe.WaitForConnection()
 		$streamWriter = New-Object System.IO.StreamWriter $namedPipe
 		$streamWriter.AutoFlush = $true
-		$pdTempResultPreConversion = (<scriptBlock>)
-		$results = ConvertTo-PDBase64StringFromObject -object $pdTempResultPreConversion
+		$TempResultPreConversion = (<scriptBlock>)
+		$results = ConvertTo-Base64StringFromObject -object $TempResultPreConversion
 		$streamWriter.WriteLine("$($results)")
 		$streamWriter.dispose()
 		$namedPipe.dispose()
-}	
+		
+}
 	$scriptBlockPreEncoded = $scriptBlockPreEncoded -replace "<pipename>", $PipeName
 	$scriptBlockPreEncoded = $scriptBlockPreEncoded -replace "<scriptBlock>", $ScriptBlock
 	$byteCommand = [System.Text.encoding]::Unicode.GetBytes($scriptBlockPreEncoded)
@@ -50,7 +68,6 @@
 	$holderData = Invoke-wmimethod -computername "$($ComputerName)" -class win32_process -name create -argumentlist "powershell.exe -encodedcommand $($encodedScriptBlock)" -credential $credential
 	
 	$namedPipe = New-Object System.IO.Pipes.NamedPipeClientStream $ComputerName, "$($PipeName)", "In"
-	
 	$namedPipe.connect()
 	$streamReader = New-Object System.IO.StreamReader $namedPipe
 	while ($null -ne ($data = $streamReader.ReadLine()))
@@ -61,3 +78,5 @@
 	$namedPipe.dispose()
 	ConvertFrom-Base64ToObject -inputString $tempData
 }
+
+#https://github.com/threatexpress/invoke-pipeshell/blob/master/Invoke-PipeShell.ps1

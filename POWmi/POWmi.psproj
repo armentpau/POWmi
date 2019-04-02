@@ -14,6 +14,8 @@
     <File Build="2" Shared="True" ReferenceFunction="Invoke-Invoke-POWmi_ps1" ExportFunctions="False">Public\Invoke-POWmi.ps1</File>
     <File Build="2" Shared="True" ReferenceFunction="Invoke-ConvertFrom-Base64StringToObject_ps1" ExportFunctions="False">Private\ConvertFrom-Base64StringToObject.ps1</File>
     <File Build="2" Shared="True" ReferenceFunction="Invoke-ConvertTo-Base64StringFromObject_ps1" ExportFunctions="False">Private\ConvertTo-Base64StringFromObject.ps1</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-ConvertFrom-CLIXml_ps1" ExportFunctions="False">Private\ConvertFrom-CLIXml.ps1</File>
+    <File Build="2" Shared="True" ReferenceFunction="Invoke-ConvertTo-CliXML_ps1" ExportFunctions="False">Private\ConvertTo-CliXML.ps1</File>
   </Files>
   <StartupScript>C:\Users\949237\Documents\Repos\POWmi\POWmi\Test-Module.ps1</StartupScript>
 </Project>

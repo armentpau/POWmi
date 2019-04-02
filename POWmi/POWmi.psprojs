@@ -12,5 +12,8 @@
     <File>Public\Invoke-POWmi.ps1</File>
     <File>Private\ConvertFrom-Base64StringToObject.ps1</File>
     <File>Private\ConvertTo-Base64StringFromObject.ps1</File>
+    <File>Private\ConvertTo-CliXML.ps1</File>
+    <File>Private\ConvertFrom-CLIXml.ps1</File>
+    <File>.gitignore</File>
   </OpenFiles>
 </ProjectState>
