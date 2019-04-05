@@ -10,8 +10,7 @@
 		[Alias('object', 'data','input')]
 		[psobject]$inputObject
 	)
-	#$holdingXml = ConvertTo-CliXml -InputObject $inputString
-	$tempString = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes([management.automation.psserializer]::Serialize($inputString)))
+	$tempString = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes([management.automation.psserializer]::Serialize($inputObject)))
 	$memoryStream = New-Object System.IO.MemoryStream
 	$compressionStream = New-Object System.IO.Compression.GZipStream($memoryStream, [System.io.compression.compressionmode]::Compress)
 	$streamWriter = New-Object System.IO.streamwriter($compressionStream)

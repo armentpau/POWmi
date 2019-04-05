@@ -26,7 +26,6 @@
 Import-Module 'POWmi'
 
 #Run each module function
-Write-HelloWorld
 
 #Sample Pester Test
 #Describe "Test POWmi" {
