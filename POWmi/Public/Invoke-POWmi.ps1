@@ -14,7 +14,9 @@
 		[string]$ComputerName = 'localhost',
 		[Parameter(Mandatory = $true)]
 		[ValidateNotNullOrEmpty()]
-		[pscredential]$Credential
+		[pscredential]$Credential,
+		[ValidateRange(1000, 900000)]
+		[int32]$Timeout = 120000
 	)
 	
 	$scriptBlockPreEncoded = [scriptblock]{
@@ -24,8 +26,8 @@
 			param
 			(
 				[Parameter(Mandatory = $true,
-						   ValueFromPipeline = $true,
-						   Position = 0)]
+						 ValueFromPipeline = $true,
+						 Position = 0)]
 				[ValidateNotNullOrEmpty()]
 				[object]$object
 			)
@@ -53,22 +55,30 @@
 		$namedPipe.WaitForConnection()
 		$streamWriter = New-Object System.IO.StreamWriter $namedPipe
 		$streamWriter.AutoFlush = $true
-		$TempResultPreConversion = (<scriptBlock>)
+		$TempResultPreConversion = &{ <scriptBlock> }
 		$results = ConvertTo-Base64StringFromObject -object $TempResultPreConversion
 		$streamWriter.WriteLine("$($results)")
 		$streamWriter.dispose()
 		$namedPipe.dispose()
 		
-}
+	}
 	$scriptBlockPreEncoded = $scriptBlockPreEncoded -replace "<pipename>", $PipeName
 	$scriptBlockPreEncoded = $scriptBlockPreEncoded -replace "<scriptBlock>", $ScriptBlock
 	$byteCommand = [System.Text.encoding]::Unicode.GetBytes($scriptBlockPreEncoded)
 	$encodedScriptBlock = [convert]::ToBase64string($byteCommand)
 	
-	$holderData = Invoke-wmimethod -computername "$($ComputerName)" -class win32_process -name create -argumentlist "powershell.exe -encodedcommand $($encodedScriptBlock)" -credential $credential
+	if ($($env:computername) -eq $ComputerName)
+	{
+		$holderData = Invoke-wmimethod -computername "$($ComputerName)" -class win32_process -name create -argumentlist "powershell.exe -encodedcommand $($encodedScriptBlock)"
+	}
+	else
+	{	
+		$holderData = Invoke-wmimethod -computername "$($ComputerName)" -class win32_process -name create -argumentlist "powershell.exe -encodedcommand $($encodedScriptBlock)" -credential $credential
+	}
+	
 	
 	$namedPipe = New-Object System.IO.Pipes.NamedPipeClientStream $ComputerName, "$($PipeName)", "In"
-	$namedPipe.connect()
+	$namedPipe.connect($timeout)
 	$streamReader = New-Object System.IO.StreamReader $namedPipe
 	while ($null -ne ($data = $streamReader.ReadLine()))
 	{
