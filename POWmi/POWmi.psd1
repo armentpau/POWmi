@@ -19,7 +19,7 @@
 	ModuleToProcess = 'POWmi.psm1'
 	
 	# Version number of this module.
-	ModuleVersion = '0.1.0.1'
+	ModuleVersion = '0.1.0.2'
 	
 	# ID used to uniquely identify this module
 	GUID = 'eca2583a-643e-4764-b120-2118b850118d'
@@ -76,7 +76,7 @@
 	NestedModules = @()
 	
 	# Functions to export from this module
-	FunctionsToExport = @('Invoke-POWmi') #For performance, list functions explicitly
+	FunctionsToExport = @() #For performance, list functions explicitly
 	
 	# Cmdlets to export from this module
 	CmdletsToExport = '' 
